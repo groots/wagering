@@ -1,0 +1,17 @@
+<p>This is the register view.</p>
+
+<form name="register" class="form-signin">
+	<h1 class="form-signin-heading text-muted">Register</h1>
+	
+	<input type="email" name="email" class="form-control" placeholder="Email address" required>
+	<input type="password" ng-model="password" name="password" class="form-control" placeholder="Password" required>
+	<input type="password" ng-model="password_confirm" name="password_confirm" class="form-control" placeholder="Rinse and Repeat">
+
+
+	<p class="help-block" ng-show="register.password_confirm.$dirty">Please Match The Passwords. 
+
+	</p>
+	<button class="btn btn-lg btn-primary btn-block" type="submit">
+		Submit
+	</button>
+</form>
