@@ -8,17 +8,22 @@
  * Controller of the tokenauthApp
  */
 angular.module('tokenauthApp')
-  .controller('RegisterCtrl', function ($scope,$rootScope, $http, alert) {
+  .controller('RegisterCtrl', function ($scope, $rootScope, $http, alert) {
+  	$scope.submit = function(){
 
-  	var url = "/";
-  	var user = {};
-  	$scope.submit = function(res){
+      var url = "http://localhost:3000/register";
+      var user = {
+        email: $scope.email,
+        password: $scope.password
+      };
+
+
   		$http.post(url, user)
   		.success(function(){
-  			console.log("good " + res);
+  			alert('success', 'Success', 'You have Been Registered');
   		})
   		.error(function(err){
-  			alert('warning', 'Opps!', 'We might have a mistake');
+  			alert('warning', 'Opps!', 'We might have a mistake - ' + err);
   		});
   	};
   });

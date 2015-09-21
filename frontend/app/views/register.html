@@ -1,7 +1,7 @@
 <form ng-submit="submit()" name="register" class="form-signin">
 	<h1 class="form-signin-heading text-muted">Register Now.</h1>
 	
-	<input type="email" name="email" class="form-control" placeholder="Email address" required>
+	<input type="email" name="email" ng-model="email" class="form-control" placeholder="Email address" required>
 	<input type="password" ng-model="password" name="password" class="form-control" placeholder="Password" required>
 	<input type="password" ng-model="password_confirm" name="password_confirm" class="form-control" placeholder="Rinse and Repeat" validate-equals-to="password">
 
