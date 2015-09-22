@@ -27,8 +27,18 @@ app.post('/register', function(req, res){
 		password: user.password
 	});
 
+	var payload = {
+		//issuer
+		iss: req.hostname, 
+		//subject is the user
+		sub: user._id
+	}
+
+	//var to hold encoded token
+	var token = jwt.encode(payload, "secret...keey");
+
 	newUser.save(function(err){
-		res.status(200).send(newUser.toJSON());
+		res.status(200).send({user: newUser.toJSON(), token: token});
 	});
 });
 

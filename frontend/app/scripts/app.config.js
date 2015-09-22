@@ -8,6 +8,10 @@ angular
   		url: '/',
   		templateUrl: '/views/main.html'
   	})
+    .state('logout', {
+      url: '/logout',
+      controller: 'LogoutCtrl'
+    })
   	.state('register', {
   		url: '/register',
   		templateUrl: '/views/register.html',

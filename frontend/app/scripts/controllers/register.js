@@ -8,7 +8,7 @@
  * Controller of the tokenauthApp
  */
 angular.module('tokenauthApp')
-  .controller('RegisterCtrl', function ($scope, $rootScope, $http, alert) {
+  .controller('RegisterCtrl', function ($scope, $rootScope, $http, alert, authToken) {
   	$scope.submit = function(){
 
       var url = "http://localhost:3000/register";
@@ -19,8 +19,9 @@ angular.module('tokenauthApp')
 
 
   		$http.post(url, user)
-  		.success(function(){
-  			alert('success', 'Success', 'You have Been Registered');
+  		.success(function(res){
+  			alert('success', 'Account Created!', 'Welcome, ' + res.user.email + '!');
+        authToken.setToken(res.token);
   		})
   		.error(function(err){
   			alert('warning', 'Opps!', 'We might have a mistake - ' + err);
