@@ -15,3 +15,4 @@ Bootswatch <br />
 BootSnip <br />
 Animate.css <br />
 Postman <br />
+Angular Animate
