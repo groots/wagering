@@ -16,5 +16,10 @@ angular
   		url: '/register',
   		templateUrl: '/views/register.html',
       controller: 'RegisterCtrl'
-  	});
+  	})
+    .state('wagers', {
+      url: '/wagers',
+      templateUrl: '/views/wagers.html',
+      controller: 'WagersCtrl'
+    });
   });
