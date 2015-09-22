@@ -9,7 +9,7 @@
 
               <ul class="nav navbar-nav navbar-right">
                 <li ui-sref-active="active"><a ui-sref="main">Home</a></li>
-                <li ui-sref-active="active"><a ui-sref="bets">Make a Bet</a></li>
+                <li ng-show="isAuthenticated()" ui-sref-active="active"><a ui-sref="bets">Make a Bet</a></li>
                 <li ng-hide="isAuthenticated()" ui-sref-active="active">
                   <a ui-sref="register">Register</a>
                 </li>
@@ -21,3 +21,5 @@
           </div>
         </div>
       </div>
+
+      <link rel="stylesheet" type="text/css" href="">
