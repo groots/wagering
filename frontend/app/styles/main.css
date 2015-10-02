@@ -124,9 +124,12 @@ body {
 }
 
 .main-alert {
-  max-width: 400px;
   margin: 0 auto;
-
+  max-width: 400px;
+  position: absolute;
+  top: 70px;
+  right: 5px;
+  left: 5px;
 }
 
 .alert-hidden {

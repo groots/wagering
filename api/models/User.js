@@ -9,7 +9,7 @@ var UserSchema = new mongoose.Schema ({
 });
 
 
-
+//Create a new method to remove password from json string ie Hide from dev tools
 UserSchema.methods.toJSON = function(){
 	var user = this.toObject();
 	delete user.password;

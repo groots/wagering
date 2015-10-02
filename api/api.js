@@ -19,19 +19,27 @@ app.use(function(req, res, next){
 
 });
 
+var wagers = [
+	'Cook',
+	'SuperHero',
+	'Whisper',
+	'Mountain Lion'	
+];
 app.post('/register', function(req, res){
+	//store everything that came in
 	var user = req.body;
 
+	//create a new user
 	var newUser = new User.model({
 		email: user.email,
 		password: user.password
 	});
 
 	var payload = {
-		//issuer
+		//issuer of token
 		iss: req.hostname, 
-		//subject is the user
-		sub: user._id
+		//subject is the user id
+		sub: newUser.id
 	}
 
 	//var to hold encoded token
@@ -40,6 +48,26 @@ app.post('/register', function(req, res){
 	newUser.save(function(err){
 		res.status(200).send({user: newUser.toJSON(), token: token});
 	});
+});
+
+app.get('/wagers', function(req, res){ 
+	//if there is no authorize header...dont proceed
+	if(!req.headers.authorization){
+		return res.status(401).send({
+			message: 'You are not authorized to see this page'
+		});
+	}
+
+	//split to separate token from bearer
+	var token = req.headers.authorization.split(' ')[1];
+	var payload = jwt.decode(token, 'secret...keey');
+
+	if(!payload.sub){
+		res.status(401).send({
+			message: "You are not authorized to see this page"
+		});
+	}
+	res.json(wagers);
 });
 
 mongoose.connect('mongodb://localhost/tokenauth');

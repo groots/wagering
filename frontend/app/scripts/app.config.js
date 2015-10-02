@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-  .module('tokenauthApp').config(function($urlRouterProvider,$stateProvider){
+  .module('tokenauthApp').config(function($urlRouterProvider,$stateProvider, $httpProvider ){
   	$urlRouterProvider.otherwise('/');
   	$stateProvider
   	.state('main', {
@@ -21,5 +21,17 @@ angular
       url: '/wagers',
       templateUrl: '/views/wagers.html',
       controller: 'WagersCtrl'
+    })
+    .state('pricing', {
+      url: '/pricing',
+      templateUrl: '/views/pricing.html'
+    })
+    .state('contact', {
+      url: '/contact',
+      templateUrl: '/views/contact.html'
     });
-  });
+
+    $httpProvider.interceptors.push('authInterceptor');
+  })
+
+  .constant('API_URL', 'http://localhost:3000/');
