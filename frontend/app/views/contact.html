@@ -1,0 +1,12 @@
+<form ng-submit="submit()" name="contact" class="form-signin">
+	<h1 class="form-signin-heading text-muted">Contact Now.</h1>
+	<input type="text" name="name" ng-model="name" class="form-control" placeholder="Name" required>
+	
+	<input type="email" name="email" ng-model="email" class="form-control" placeholder="Email Address" required>
+	<textarea  ng-model="password_confirm" name="contact_message" class="form-control" placeholder="Message" required></textarea>
+
+
+	<button class="btn btn-lg btn-primary btn-block" type="submit">
+		Submit
+	</button>
+</form>

@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var mongoose = require('mongoose');
 var User = require('./models/User.js');
-var jwt = require('./services/jwt.js');
+var jwt = require('jwt-simple');
 
  
 app.use(bodyParser.json());
@@ -25,12 +25,13 @@ var wagers = [
 	'Whisper',
 	'Mountain Lion'	
 ];
+
 app.post('/register', function(req, res){
 	//store everything that came in
 	var user = req.body;
 
 	//create a new user
-	var newUser = new User.model({
+	var newUser = new User({
 		email: user.email,
 		password: user.password
 	});
@@ -48,6 +49,19 @@ app.post('/register', function(req, res){
 	newUser.save(function(err){
 		res.status(200).send({user: newUser.toJSON(), token: token});
 	});
+});
+
+app.get('/login', function(req, res){
+	req.user = req.body;
+
+	User.findOne({email: req.user.email}, function(err, user){
+		if(err){
+			throw err;
+		}
+		user.comparePasswords(req.user.password);
+	});
+
+
 });
 
 app.get('/wagers', function(req, res){ 
