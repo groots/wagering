@@ -36,32 +36,40 @@ app.post('/register', function(req, res){
 		password: user.password
 	});
 
-	var payload = {
-		//issuer of token
-		iss: req.hostname, 
-		//subject is the user id
-		sub: newUser.id
-	}
-
-	//var to hold encoded token
-	var token = jwt.encode(payload, "secret...keey");
-
 	newUser.save(function(err){
-		res.status(200).send({user: newUser.toJSON(), token: token});
+		createSendToken(newUser, res);
 	});
 });
 
-app.get('/login', function(req, res){
-	req.user = req.body;
 
-	User.findOne({email: req.user.email}, function(err, user){
+app.post('/login', function(req, res){
+	req.user = req.body;
+	var searchUser = {
+		email: req.user.email
+	}; 
+	User.findOne(searchUser, function(err, user){
 		if(err){
 			throw err;
 		}
-		user.comparePasswords(req.user.password);
+		//check if user is null
+		if(!user){	
+			return res.status(401).send({
+				message: 'The User Credentials are not correct'
+			});
+		}
+
+		user.comparePasswords(req.user.password, function(err, isMatch){
+			if(err){
+				throw err;
+			}
+			if(!isMatch){
+				return res.status(401).send({
+					message: 'The User Credentials are not correct'
+				});				
+			}
+			createSendToken(user, res);
+		});
 	});
-
-
 });
 
 app.get('/wagers', function(req, res){ 
@@ -83,6 +91,25 @@ app.get('/wagers', function(req, res){
 	}
 	res.json(wagers);
 });
+
+
+function createSendToken(user, res){
+	var payload = {
+		//issuer of token
+		// iss: req.hostname, 
+		//subject is the user id
+		sub: user.id
+	}
+
+	//var to hold encoded token
+	var token = jwt.encode(payload, "secret...keey");
+	res.status(200)
+	.send({
+		user: user.toJSON(), 
+		token: token
+	});
+}
+
 
 mongoose.connect('mongodb://localhost/tokenauth');
 var server = app.listen(3000, function(){

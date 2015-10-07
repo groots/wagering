@@ -15,7 +15,8 @@ angular.module('tokenauthApp')
   			hasBeenShown: true,
   			show: true,
   			type: type, 
-  			title: title
+  			title: title, 
+        message: message
 
   		};
   		$timeout.cancel(alertTimeout);
