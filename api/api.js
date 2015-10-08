@@ -1,12 +1,23 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-var mongoose = require('mongoose');
-var User = require('./models/User.js');
-var jwt = require('jwt-simple');
+var express 		= require('express');
+var bodyParser 		= require('body-parser');
+var app 			= express();
+var mongoose 		= require('mongoose');
+var User 			= require('./models/User.js');
+var jwt 			= require('jwt-simple');
+var passport 		= require('passport');
+var LocalStrategy 	= require('passport-local').Strategy;
 
  
 app.use(bodyParser.json());
+//Have app use passport
+app.use(passport.initialize());
+
+
+//serlize user based off userid
+passport.serializeUser(function(user, done){
+	//support async
+	done(null, user.id);
+});
 
 
 //Handles and potential CORS issues
@@ -19,12 +30,36 @@ app.use(function(req, res, next){
 
 });
 
-var wagers = [
-	'Cook',
-	'SuperHero',
-	'Whisper',
-	'Mountain Lion'	
-];
+//set up local strategy
+var strategy = new LocalStrategy({
+	usernameField: 'email', 
+	function(email, password, done){
+		if(err){
+			return done(err);
+		}
+		//check if user is null
+		//done (null, user, err)
+		if(!user){	
+			return done(null, false, {
+				message: 'The User Credentials are not correct'
+			});
+		}
+
+		user.comparePasswords(password, function(err, isMatch){
+			if(err){
+				return done(err);
+			}
+			if(!isMatch){
+				return done(null, false, {
+					message: 'The User Credentials are not correct'
+				});				
+			}
+			return done(null, user);
+		}); 
+	}
+});
+
+passport.use(strategy); 
 
 app.post('/register', function(req, res){
 	//store everything that came in
@@ -48,27 +83,7 @@ app.post('/login', function(req, res){
 		email: req.user.email
 	}; 
 	User.findOne(searchUser, function(err, user){
-		if(err){
-			throw err;
-		}
-		//check if user is null
-		if(!user){	
-			return res.status(401).send({
-				message: 'The User Credentials are not correct'
-			});
-		}
-
-		user.comparePasswords(req.user.password, function(err, isMatch){
-			if(err){
-				throw err;
-			}
-			if(!isMatch){
-				return res.status(401).send({
-					message: 'The User Credentials are not correct'
-				});				
-			}
-			createSendToken(user, res);
-		});
+		
 	});
 });
 
