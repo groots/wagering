@@ -10,6 +10,7 @@ angular.module('tokenauthApp')
   			alert('success', 'Login Sucessful!', 'Welcome, ' + res.user.email + '!');        	
   		})
   		.error(function(err){
+        console.log(err);
   			alert('warning', 'Opps!', 'We might have a mistake - ' + err);
   		});
   	};
