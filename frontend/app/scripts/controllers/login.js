@@ -14,4 +14,10 @@ angular.module('tokenauthApp')
   			alert('warning', 'Opps!', 'We might have a mistake - ' + err);
   		});
   	};
+
+
+    $scope.google = function(){
+      // auth.googleAuth().then();
+      auth.googleAuth();
+    };
   });
