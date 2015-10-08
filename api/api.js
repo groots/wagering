@@ -59,6 +59,22 @@ var loginStrategy = new LocalStrategy(strategyOptions, function(email, password,
 
 var registerStrategy = new LocalStrategy(strategyOptions, function(email, password, done){
 
+    var searchUser = {
+        email: email
+    }
+    User.findOne(searchUser, function(err, user){
+        if(err) return done(err);
+        
+        //check if user is null
+        if(!user){  
+            return done(null, false, {
+                message: 'I think you\'ve been here before. Email already used!'
+            });
+        }
+    });
+
+
+
     //create a new user
     var newUser = new User({
         email: email,
@@ -72,8 +88,6 @@ var registerStrategy = new LocalStrategy(strategyOptions, function(email, passwo
 
 passport.use('local-register', registerStrategy);
 passport.use('local-login', loginStrategy);
-
-
 
 app.post('/register', passport.authenticate('local-register'), function(req, res){
 	createSendToken(req.user, res);
