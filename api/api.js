@@ -5,6 +5,7 @@ var User = require('./models/User.js');
 var jwt = require('jwt-simple');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var request = require('request');
 
  
 var app = express();
@@ -96,6 +97,10 @@ app.post('/register', passport.authenticate('local-register'), function(req, res
 
 app.post('/login', passport.authenticate('local-login'), function(req, res){
     createSendToken(req.user, res);
+});
+
+app.post('/auth/google', function(req, res){
+    console.log(req.body.code);
 });
 
 app.get('/wagers', function(req, res){ 
