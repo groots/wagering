@@ -44,17 +44,7 @@ var loginStrategy = new LocalStrategy(strategyOptions, function(email, password,
             return done(null, false, {
                 message: 'The User Credentials are not correct'
             });
-        }
-
-        user.comparePasswords(password, function(err, isMatch){
-            if(err) return done(err);
-            
-            if(!isMatch) return done(null, false, {
-                    message: 'The User Credentials are not correct'
-                });       
-
-            return done(null, user);
-        });
+        } 
     });
 });
 
@@ -67,7 +57,7 @@ var registerStrategy = new LocalStrategy(strategyOptions, function(email, passwo
         if(err) return done(err);
         
         //check if user is null
-        if(!user){  
+        if(user){  
             return done(null, false, {
                 message: 'I think you\'ve been here before. Email already used!'
             });
@@ -101,6 +91,48 @@ app.post('/login', passport.authenticate('local-login'), function(req, res){
 
 app.post('/auth/google', function(req, res){
     console.log(req.body.code);
+    var params = {
+        client_id: req.body.clientId,
+        redirect_uri: req.body.redirectUri,
+        code: req.body.code,
+        grant_type: 'authorization_code',
+        client_secret: 'jx72t6CWmhnpd7EEzr_Al8qL'
+    }
+
+    var url = 'https://accounts.google.com/o/oauth2/token';
+    var apiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
+
+    request.post(url, {
+        json: true,
+        form: params
+    }, function(err, response, token){
+        var accessToken = token.access_token;
+        var headers = {
+            Authorization: 'Bearer ' + accessToken
+        }
+
+        //we can make a request to google apis now that we have a token
+        request.get({
+            url: apiUrl,
+            headers: headers,
+            json: true
+        }, function(err, response, profile){
+            console.log(profile);
+            User.findOne({googleId: profile.sub}, function(err, foundUser){
+                if(foundUser) return createSendToken(foundUser, res);
+
+                var newUser = new User();
+                newUser.googleId = profile.sub;
+                newUser.displayName = profile.name;
+
+                newUser.save(function(err){
+                    if(err) return next(err);
+
+                    createSendToken(newUser, res);
+                });
+            });
+        });
+    });
 });
 
 app.get('/wagers', function(req, res){ 

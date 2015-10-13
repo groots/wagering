@@ -42,6 +42,9 @@ angular
   .constant('API_URL', 'http://localhost:3000/')
   .run(function($window){
     var params = $window.location.search.substring(1);
+
+    //check if window is open with opener and check if its the same as the origin
+    //check to see if popup window is sending code to main window
     if(params && $window.opener && $window.opener.location.origin === $window.location.origin){
       var pair = params.split('=');
       var code = decodeURIComponent(pair[1]);

@@ -9,15 +9,18 @@ angular.module('tokenauthApp')
   		.success(function(res){
   			alert('success', 'Login Sucessful!', 'Welcome, ' + res.user.email + '!');        	
   		})
-  		.error(function(err){
-        console.log(err);
-  			alert('warning', 'Opps!', 'We might have a mistake - ' + err);
-  		});
+  		.error(handleError);
   	};
 
 
     $scope.google = function(){
-      // auth.googleAuth().then();
-      auth.googleAuth();
+      auth.googleAuth().then(function(res){
+        alert('success', 'Login Sucessful!', 'Welcome, ' + res.user.displayName + '!');                 
+      }, handleError);
     };
+
+
+    function handleError(err){
+      alert('warning', 'Opps!', 'We might have a mistake - ' + err);
+    }
   });

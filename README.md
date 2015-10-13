@@ -17,3 +17,13 @@ Animate.css <br />
 Postman <br />
 Angular Animate <br />
 jwt-simple
+
+
+<br />
+#Run application
+Make sure db is set
+====================== <br />
+/api/api.js search mongoose <br />
+Backend - nodemon api.js <br />
+Frontend - grunt server
+		 - grunt build	
