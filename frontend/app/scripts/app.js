@@ -9,4 +9,4 @@
  * Main module of the application.
  */
 angular
-  .module('tokenauthApp', ['ui.router', 'ngAnimate']);
+  .module('tokenauthApp', ['ui.router', 'ngAnimate', 'satellizer']);

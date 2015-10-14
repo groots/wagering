@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-  .module('tokenauthApp').config(function($urlRouterProvider,$stateProvider, $httpProvider ){
+  .module('tokenauthApp').config(function($urlRouterProvider,$stateProvider, $httpProvider, $authProvider, API_URL){
   	$urlRouterProvider.otherwise('/');
   	$stateProvider
   	.state('main', {
@@ -34,6 +34,11 @@ angular
     .state('contact', {
       url: '/contact',
       templateUrl: '/views/contact.html'
+    });
+
+    $authProvider.google({
+      clientId: '285471473072-rolf3qaodbpjp3fhhkq56sqhbdddcmsh.apps.googleusercontent.com',
+      url: API_URL + 'auth/google'
     });
 
     $httpProvider.interceptors.push('authInterceptor');
