@@ -2,21 +2,22 @@
 Token Auth, node api, angular frontend
 
 #Tools Used
-Node <br />
-Express <br />
-Mongodb  <br />
-Mongoose  <br />
-Bcrypt <br />
-JWT  <br />
-Crypto  <br />
-Angular <br />
-Bootstrap <br />
-Bootswatch <br />
-BootSnip <br />
+Node - server <br />
+Express - api helper<br />
+Mongodb  - hold data<br />
+Mongoose  - hold data helper<br />
+Bcrypt - encrypt stuff<br />
+JWT  - method to pass authenicationers around<br />
+Crypto  - encryption algorithym for jwts<br />
+Angular - add opinons on how to develop app<br />
+Bootstrap - add resuable structure and style<br />
+Bootswatch - used to add bs style away from norm<br />
+BootSnip - used to add components<br />
 Animate.css <br />
-Postman <br />
-Angular Animate <br />
-jwt-simple
+Postman - pass message/alerts around<br />
+Angular Animate - page animations <br /> 
+jwt-simple - handles jwts<br />	
+moments.js - handles jwt expiration by helping with times and dates
 
 
 <br />

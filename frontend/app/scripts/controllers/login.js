@@ -5,11 +5,18 @@ angular.module('tokenauthApp')
 
 	 
   	$scope.submit = function(){
-  		auth.login($scope.email, $scope.password)
-  		.success(function(res){
-  			alert('success', 'Login Sucessful!', 'Welcome, ' + res.user.email + '!');        	
+      console.log("working");
+
+      var user = {
+        email: $scope.email,
+        password: $scope.password
+      };
+      
+  		$auth.login(user).then(function(res){
+        console.log("success");
+  			alert('success', 'Login Sucessful!', 'Welcome, ' + res.data.user.email + '!');        	
   		})
-  		.error(handleError);
+  		.catch(handleError);
   	};
 
 
@@ -21,6 +28,7 @@ angular.module('tokenauthApp')
 
 
     function handleError(err){
+      console.log('error here');
       alert('warning', 'Opps!', 'We might have a mistake - ' + err);
     }
   });

@@ -36,6 +36,9 @@ angular
       templateUrl: '/views/contact.html'
     });
 
+    $authProvider.loginUrl = API_URL + 'login';
+    $authProvider.signupUrl = API_URL + 'register';
+    $authProvider.withCredentials = false;
     $authProvider.google({
       clientId: '285471473072-rolf3qaodbpjp3fhhkq56sqhbdddcmsh.apps.googleusercontent.com',
       url: API_URL + 'auth/google'
