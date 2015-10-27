@@ -1,14 +1,30 @@
+
+<h1 class="form-signin-heading text-muted">Register Now.</h1>
+
 <form ng-submit="submit()" name="register" class="form-signin">
-	<h1 class="form-signin-heading text-muted">Register Now.</h1>
-	
-	<input type="email" name="email" ng-model="email" class="form-control" placeholder="Email address" required>
-	<input type="password" ng-model="password" name="password" class="form-control" placeholder="Password" required>
+	<div class="form-group">
+		<input type="email" name="email" ng-model="email" class="form-control" placeholder="Email address" required>
+		<input type="password" ng-model="user.password" name="password" class="form-control" id="password" placeholder="Password" required>
+	</div>
+
+
+	<div class="progress">
+		<div class="progress-bar"
+			ng-class="{'progress-bar-success': isPasswordStrong(), 'progress-bar-warning': isPasswordOk(), 'progress-bar-danger': isPasswordWeak()}"
+			aria-valuenow="{{ passwordStrength }}"
+			aria-valuemin-"0"
+			aria-valuemax="100"
+			style="width: {{ passwordStrength }}%">
+			
+		</div>
+	</div>
+
 	<input type="password" ng-model="password_confirm" name="password_confirm" class="form-control" placeholder="Rinse and Repeat" validate-equals-to="password">
 
 
 	<p class="help-block" ng-show="register.password_confirm.$dirty && register.password_confirm.$invalid">Please Match The Passwords. 
 	</p>
-	<button class="btn btn-lg btn-primary btn-block" type="submit">
+	<button class="btn btn-lg btn-success btn-block" type="submit">
 		Submit
 	</button>
 </form>

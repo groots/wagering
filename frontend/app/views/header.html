@@ -8,8 +8,14 @@
       <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
         <ul class="nav navbar-nav navbar-right">
-          <li ui-sref-active="active"><a ui-sref="main">Home</a></li>
+          <li ng-hide="isAuthenticated()" ui-sref-active="active"><a ui-sref="main">Home</a></li>
+          <li ng-show="isAuthenticated()" ui-sref-active="active">
+            <a ui-sref="dashboard">Dashboard</a>
+          </li>
           <li ng-show="isAuthenticated()" ui-sref-active="active"><a ui-sref="wagers">Wagers</a></li>
+          <li ng-show="isAuthenticated()" ui-sref-active="active">
+            <a ui-sref="account">Account</a>
+          </li>
           <li ng-hide="isAuthenticated()" ui-sref-active="active">
             <a ui-sref="pricing">Pricing</a>
           </li>

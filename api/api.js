@@ -5,7 +5,9 @@ var User = require('./models/User.js');
 var jwt = require('jwt-simple');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var request = require('request');
+var googleAuth = require('./services/googleAuth');
+var facebookAuth = require('./services/facebookAuth');
+var createSendToken = require('./services/jwt');
 
  
 var app = express();
@@ -38,13 +40,18 @@ var loginStrategy = new LocalStrategy(strategyOptions, function(email, password,
     }
     User.findOne(searchUser, function(err, user){
         if(err) return done(err);
-        
-        //check if user is null
-        if(!user){  
-            return done(null, false, {
-                message: 'The User Credentials are not correct'
-            });
-        } 
+
+        if(!user) return done(null, false, {message: 'Wrong email/password'});
+
+        user.comparePasswords(password, function(err, isMatch){
+            if(err) return done(err);
+
+            if(!isMatch){
+                return done(null, false, {message: 'Wrong email/password'});
+            }
+
+            return done(null, user);
+        });
     });
 });
 
@@ -59,81 +66,48 @@ var registerStrategy = new LocalStrategy(strategyOptions, function(email, passwo
         //check if user is null
         if(user){  
             return done(null, false, {
-                message: 'I think you\'ve been here before. Email already used!'
+                message: "I think you've been here before. Email already used!"
             });
         }
+
+
+        //create a new user
+        var newUser = new User({
+            email: email,
+            password: password
+        });
+
+        newUser.save(function(err){
+            done(null, newUser)
+        });
     });
 
-
-
-    //create a new user
-    var newUser = new User({
-        email: email,
-        password: password
-    });
-
-    newUser.save(function(err){
-        done(null, newUser)
-    });
 });
 
 passport.use('local-register', registerStrategy);
 passport.use('local-login', loginStrategy);
 
-app.post('/register', passport.authenticate('local-register'), function(req, res){
+app.post('/auth/register', passport.authenticate('local-register'), function(req, res){
 	createSendToken(req.user, res);
 });
 
 
-app.post('/login', passport.authenticate('local-login'), function(req, res){
+
+
+app.post('/auth/login', passport.authenticate('local-login'), function(req, res){
     createSendToken(req.user, res);
 });
 
-app.post('/auth/google', function(req, res){
-    console.log(req.body.code);
-    var params = {
-        client_id: req.body.clientId,
-        redirect_uri: req.body.redirectUri,
-        code: req.body.code,
-        grant_type: 'authorization_code',
-        client_secret: 'jx72t6CWmhnpd7EEzr_Al8qL'
-    }
+app.post('/auth/facebook', facebookAuth);
 
-    var url = 'https://accounts.google.com/o/oauth2/token';
-    var apiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
+app.post('/auth/google', googleAuth);
 
-    request.post(url, {
-        json: true,
-        form: params
-    }, function(err, response, token){
-        var accessToken = token.access_token;
-        var headers = {
-            Authorization: 'Bearer ' + accessToken
-        }
-
-        //we can make a request to google apis now that we have a token
-        request.get({
-            url: apiUrl,
-            headers: headers,
-            json: true
-        }, function(err, response, profile){
-            console.log(profile);
-            User.findOne({googleId: profile.sub}, function(err, foundUser){
-                if(foundUser) return createSendToken(foundUser, res);
-
-                var newUser = new User();
-                newUser.googleId = profile.sub;
-                newUser.displayName = profile.name;
-
-                newUser.save(function(err){
-                    if(err) return next(err);
-
-                    createSendToken(newUser, res);
-                });
-            });
-        });
-    });
-});
+var wagers = [
+    'Cook',
+    'SuperHero',
+    'Whisper',
+    'Mountain Lion' 
+];
 
 app.get('/wagers', function(req, res){ 
 	//if there is no authorize header...dont proceed
@@ -155,21 +129,6 @@ app.get('/wagers', function(req, res){
 	res.json(wagers);
 });
 
-
-function createSendToken(user, res){
-	var payload = {
-		//issuer of token
-		// iss: req.hostname, 
-		//subject is the user id
-		sub: user.id
-	}
-
-	//var to hold encoded token
-	var token = jwt.encode(payload, "secret...keey");
-	res.status(200)
-	.send({user: user.toJSON(), token: token});
-	
-}
 
 
 mongoose.connect('mongodb://localhost/tokenauth');

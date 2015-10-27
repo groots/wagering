@@ -1,21 +1,32 @@
 'use strict';
 
 angular.module('tokenauthApp')
-.controller('LoginCtrl', function ($scope, alert, auth) {
+.controller('LoginCtrl', function ($scope, alert, auth, $auth, $state) {
 
-	
+	 
   	$scope.submit = function(){
-  		auth.login($scope.email, $scope.password)
-  		.success(function(res){
-  			alert('success', 'Login Sucessful!', 'Welcome, ' + res.user.email + '!');        	
-  		})
-  		.error(handleError);
+          $auth.login({
+              email: $scope.email,
+              password: $scope.password
+              }).then(function(res){
+
+                  var message = 'Thanks for coming back ' + res.data.user.email + '!';
+
+                  if(!res.data.user.active){
+                    message = 'Just a reminder, please activate your account soon !';
+                  }
+
+                  alert('success', 'Welcome', message);
+
+                  $state.go('dashboard'); 
+              }).catch(handleError);
   	};
 
 
-    $scope.google = function(){
-      auth.googleAuth().then(function(res){
-        alert('success', 'Login Sucessful!', 'Welcome, ' + res.user.displayName + '!');                 
+    $scope.authenticate = function(provider){
+      $auth.authenticate(provider).then(function(res){
+        alert('success', 'Login Sucessful!', 'Welcome, ' + res.data.user.displayName + '!');  
+        $state.go('dashboard');                
       }, handleError);
     };
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-  .module('tokenauthApp').config(function($urlRouterProvider,$stateProvider, $httpProvider ){
+  .module('tokenauthApp').config(function($urlRouterProvider,$stateProvider, $httpProvider, $authProvider, API_URL){
   	$urlRouterProvider.otherwise('/');
   	$stateProvider
   	.state('main', {
@@ -24,7 +24,7 @@ angular
     })
     .state('wagers', {
       url: '/wagers',
-      templateUrl: '/views/wagers.html',
+      templateUrl: '/views/admin/wagers.html',
       controller: 'WagersCtrl'
     })
     .state('pricing', {
@@ -34,6 +34,33 @@ angular
     .state('contact', {
       url: '/contact',
       templateUrl: '/views/contact.html'
+    })
+    .state('dashboard', {
+      url: '/admin/dashboard',
+      templateUrl: '/views/admin/dashboard.html'
+    })
+    .state('account', {
+      url: '/admin/account',
+      templateUrl: '/views/admin/account.html'
+    })
+    .state('editProfile', {
+      url: '/admin/editProfile',
+      templateUrl: '/views/admin/editProfile.html'
+    });
+
+    $authProvider.withCredentials = false;
+    $authProvider.loginUrl = API_URL + 'auth/login';
+    $authProvider.signupUrl = API_URL + 'auth/register';
+    $authProvider.loginRedirect = 'dashboard'; 
+    $authProvider.google({
+      clientId: '285471473072-rolf3qaodbpjp3fhhkq56sqhbdddcmsh.apps.googleusercontent.com',
+      url: API_URL + 'auth/google',
+    });
+
+
+    $authProvider.facebook({
+      clientId: '974325515942580',
+      url: API_URL + 'auth/facebook' 
     });
 
     $httpProvider.interceptors.push('authInterceptor');
